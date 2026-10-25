@@ -1,0 +1,82 @@
+:root{
+  --bg:#F5F8FF; --surface:#fff; --surface2:#FAFBFF;
+  --ink:#14171A; --muted:#6A6A8E; --line:#D8DCF0;
+  --indigo:#2A1DB5; --orange:#EE8B2B; --green:#1E7A4B; --red:#A32020;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding:26px 20px 90px}
+
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;
+  padding-bottom:16px;border-bottom:2px solid var(--ink);margin-bottom:22px}
+h1{font-size:21px;margin:0 0 2px}
+.sub{color:var(--muted);font-size:13px;margin:0}
+
+.pill{display:inline-block;font:600 11px var(--mono);letter-spacing:.07em;padding:4px 10px;border-radius:99px}
+.ok{background:#E3F3EA;color:var(--green)}
+.no{background:#F8E6E6;color:var(--red)}
+.wait{background:#FDF0E2;color:var(--orange)}
+
+nav{display:flex;gap:4px;margin-bottom:20px}
+nav button{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);
+  font:600 14px var(--sans);padding:7px 14px;cursor:pointer}
+nav button[aria-selected="true"]{color:var(--indigo);border-bottom-color:var(--indigo)}
+
+.row{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:18px}
+.grow{flex:1;min-width:330px}
+h2{font:600 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+h3{font-size:15px;margin:22px 0 8px}
+
+label{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px}
+input,select,textarea{font:14px var(--sans);padding:8px 10px;border:1px solid var(--line);
+  border-radius:4px;width:100%;background:#fff;color:inherit}
+textarea{font-family:var(--mono);font-size:13px;resize:vertical}
+input[type=range]{padding:0}
+
+button.b{font:600 14px var(--sans);padding:9px 17px;border-radius:5px;border:1px solid var(--indigo);
+  background:var(--indigo);color:#fff;cursor:pointer}
+button.b.ghost{background:#fff;color:var(--indigo)}
+button.b:disabled{opacity:.35;cursor:not-allowed}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+
+.hint{font-size:13px;color:var(--muted);margin:9px 0 0}
+.big{font:700 32px/1 var(--mono);color:var(--indigo)}
+.mono{font-family:var(--mono)}
+
+table{border-collapse:collapse;width:100%;font:13px var(--mono);margin-top:10px}
+th,td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font:600 10px var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
+  background:var(--surface2)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.scroll{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:5px;margin-top:10px}
+.scroll table{margin:0}
+.scroll th{position:sticky;top:0;z-index:1}
+
+#dial{cursor:crosshair;touch-action:none;display:block;margin:4px auto 0;max-width:100%;height:auto}
+
+.banner{border-radius:6px;padding:12px 15px;font-size:13px;margin-bottom:18px}
+.banner.warn{background:#FDF0E2;border:1px solid #F2D4AE}
+.banner.err{background:#F8E6E6;border:1px solid #E8BDBD}
+code{font:13px var(--mono);background:#EDEFFA;padding:1px 5px;border-radius:3px}
+
+.claims{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.claim{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:16px}
+.claim .id{font:700 11px var(--mono);color:var(--orange);letter-spacing:.08em}
+.claim .lbl{font-size:13px;color:var(--muted);margin:3px 0 10px;min-height:34px}
+.claim .v{font:700 27px/1 var(--mono);color:var(--indigo)}
+.claim .ci{font:12px var(--mono);color:var(--muted);margin-top:5px}
+.claim .orig{font-size:12px;color:var(--muted);margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+
+.conf td.d{background:#EDEFFA;font-weight:700}
+.conf td.z{color:#C6C9DF}
+
+.bar{display:inline-block;height:9px;border-radius:2px;vertical-align:middle}
+.bar.neg{background:var(--indigo)} .bar.pos{background:var(--orange)}
+
+.hidden{display:none}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted)}

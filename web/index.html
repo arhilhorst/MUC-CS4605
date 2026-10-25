@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Group 18 · Bearing Study</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>Bearing judgement study</h1>
+    <p class="sub">Group 18 · CS 4605 · replication of Dobbelstein, Henzler &amp; Rukzio (CHI EA 2016), Study 1</p>
+  </div>
+  <div style="text-align:right">
+    <span class="pill wait" id="link">not connected</span>
+    <div class="btnrow" style="justify-content:flex-end;margin-top:10px">
+      <button class="b" id="connect">Connect board</button>
+      <button class="b ghost" id="stop" disabled>All off</button>
+    </div>
+  </div>
+</header>
+
+<div class="banner warn" id="serialWarn">
+  Chrome or Edge only, and the page must be served over <code>http://localhost</code> or
+  <code>https</code> — Web Serial will not attach from a <code>file://</code> page.
+  From the repo root: <code>cd web &amp;&amp; python3 -m http.server 8000</code>, then open
+  <code>http://localhost:8000</code>.
+</div>
+
+<nav role="tablist">
+  <button role="tab" id="tab-run"   aria-selected="true"  aria-controls="v-run">Run</button>
+  <button role="tab" id="tab-cal"   aria-selected="false" aria-controls="v-cal">Calibrate</button>
+  <button role="tab" id="tab-rep"   aria-selected="false" aria-controls="v-rep">Report</button>
+</nav>
+
+<!-- ================= RUN ================= -->
+<section id="v-run">
+  <div class="row">
+
+    <div class="card" style="min-width:300px;max-width:340px">
+      <h2>Session</h2>
+
+      <label for="pid">Participant ID</label>
+      <input id="pid" placeholder="P01" autocomplete="off">
+
+      <label for="seq">Sequence</label>
+      <select id="seq"></select>
+
+      <label for="reps">Repetitions</label>
+      <input id="reps" type="number" min="1" max="10" value="3">
+
+      <div id="customWrap" class="hidden">
+        <label for="custom">Angles, comma separated</label>
+        <textarea id="custom" rows="3" placeholder="0, 45, -90, 135, 180"></textarea>
+      </div>
+
+      <p class="hint" id="seqNote"></p>
+
+      <div class="btnrow">
+        <button class="b" id="build">Build sequence</button>
+      </div>
+      <p class="hint" id="seqInfo"></p>
+    </div>
+
+    <div class="card grow">
+      <h2>Trial</h2>
+      <div style="display:flex;gap:26px;align-items:baseline;flex-wrap:wrap">
+        <div>
+          <div class="big" id="counter">—</div>
+          <div class="hint" style="margin:0">trial</div>
+        </div>
+        <div class="hint" id="feedback" style="margin:0;flex:1;min-width:200px"></div>
+      </div>
+
+      <svg id="dial" width="360" height="360" viewBox="0 0 360 360" role="img"
+           aria-label="Click the direction you felt"></svg>
+
+      <p class="hint" id="prompt">Connect the board, then build a sequence.</p>
+
+      <div class="btnrow">
+        <button class="b" id="play" disabled>Play stimulus</button>
+        <button class="b ghost" id="replay" disabled>Replay</button>
+        <button class="b ghost" id="skip" disabled>Skip</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2>This session <span id="nRows" class="mono"></span></h2>
+    <div class="scroll">
+      <table id="live">
+        <thead><tr>
+          <th>#</th><th>true</th><th>sect</th><th>resp</th><th>sect</th>
+          <th class="num">err</th><th>±10</th><th>±20</th>
+          <th class="num">rt&nbsp;ms</th><th class="num">reps</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CALIBRATE ================= -->
+<section id="v-cal" class="hidden">
+  <div class="banner warn">
+    Everything on this tab is for the pilot sessions. Once the values are frozen into the
+    analysis plan, do not come back here mid-study.
+  </div>
+
+  <div class="row">
+    <div class="card" style="min-width:300px">
+      <h2>Drive level</h2>
+      <input type="range" id="duty" min="0" max="255" value="255">
+      <p class="hint">Duty <span class="mono" id="dutyVal">255</span> / 255
+        — this is <code>DRIVE_DUTY</code> in the sketch.</p>
+      <div class="btnrow">
+        <button class="b ghost" id="dutySend">Apply to board</button>
+      </div>
+      <p class="hint">
+        At 255 all four tactors are simply held on and behave identically. Below 255 the
+        left-bottom tactor on pin 6 runs at 976 Hz and will whine, because Timer0 cannot be
+        re-prescaled without breaking <code>delay()</code>. Move it to pin 3 before calibrating.
+      </p>
+    </div>
+
+    <div class="card grow">
+      <h2>Fire one tactor</h2>
+      <div class="btnrow" id="chBtns"></div>
+      <label for="chMs">Duration, ms</label>
+      <input id="chMs" type="number" value="600" min="20" max="5000">
+
+      <h3>Play one angle</h3>
+      <label for="calAngle">Angle, degrees</label>
+      <input id="calAngle" type="number" value="60" min="-180" max="180">
+      <p class="hint" id="calPreview"></p>
+      <div class="btnrow">
+        <button class="b" id="calPlay" disabled>Play</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <h2>Serial log</h2>
+    <div class="scroll" style="max-height:200px">
+      <table><tbody id="log"></tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REPORT ================= -->
+<section id="v-rep" class="hidden">
+  <div class="btnrow" style="margin:0 0 18px">
+    <button class="b ghost" id="csv">Download CSV</button>
+    <button class="b ghost" id="json">Download JSON</button>
+    <button class="b ghost" id="clear">Clear session</button>
+  </div>
+
+  <div id="repEmpty" class="banner warn">No responses logged yet. Run some trials first.</div>
+
+  <div id="repBody" class="hidden">
+    <div class="claims" id="claims"></div>
+
+    <div class="row" style="margin-top:18px">
+      <div class="card grow">
+        <h2>Signed error by true sector</h2>
+        <p class="hint" style="margin:0 0 6px">
+          Negative means the participant judged the angle smaller than it was. Claim C4 predicts
+          negative for the top sectors and positive for the bottom ones.
+        </p>
+        <table id="bySector">
+          <thead><tr><th>sector</th><th class="num">n</th><th class="num">signed</th>
+            <th></th><th class="num">|err|</th><th class="num">acc</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="card" style="min-width:330px">
+        <h2>Confusion — true (row) × response (col)</h2>
+        <table class="conf" id="conf"><tbody></tbody></table>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h2>Apparatus</h2>
+      <table id="apparatus"><tbody></tbody></table>
+      <p class="hint">
+        Onset latency is measured host-side, from the moment the play command is written to the
+        moment the board reports its first drive edge. The proposal's gate is under 20 ms.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Stimulus encoding and both angle sets follow Dobbelstein, Henzler &amp; Rukzio,
+  “Unconstrained Pedestrian Navigation based on Vibro-tactile Feedback around the Wristband of a
+  Smartwatch”, CHI EA 2016, pp. 2439–2445. Actuation parameters are ours and are listed in the
+  sketch.
+</footer>
+
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

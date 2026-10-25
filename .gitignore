@@ -1,0 +1,15 @@
+# exported session data — decide deliberately before committing any
+data/*
+!data/.gitkeep
+
+# editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Arduino build output
+firmware/**/build/
+*.hex
+*.elf
