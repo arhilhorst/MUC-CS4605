@@ -38,11 +38,11 @@ and a 0.1 µF across it for brush noise. Motors run from an MCP1700-3002
 regulator off the Uno's 5 V pin, not off a GPIO — they pull about 85 mA each,
 and an Uno pin dies above 40 mA.
 
-### Known issue: pin 6
+### Issue: pin 6
 
 Pins 9, 10 (Timer1) and 11 (Timer2) are re-prescaled to ~31.4 kHz, above
 hearing. **Pin 6 is on Timer0**, which also runs `millis()` and `delay()`, so
-its prescaler is left alone and it idles at the Arduino default of 976 Hz.
+its prescaler is left alone and it idles at the Arduino default of 976 Hz. .
 
 At `DRIVE_DUTY = 255` this does not matter — the pin is simply held high and
 all four tactors behave identically. The moment the drive level is lowered for
